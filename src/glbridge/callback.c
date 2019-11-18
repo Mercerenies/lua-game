@@ -3,6 +3,8 @@
 
 #include <GL/glut.h>
 
+#define MILLIS_PER_FRAME 16
+
 static const GLBridgeCallbacks* callbacks = NULL;
 
 static void cb_render() {
@@ -23,9 +25,15 @@ static void cb_resize(int w, int h) {
   gluOrtho2D(0, 0, w, h);
 }
 
+static void cb_timer(int value) {
+  cb_render();
+  glutTimerFunc(MILLIS_PER_FRAME, cb_timer, value);
+}
+
 void glbridge_init_callbacks() {
   glutDisplayFunc(cb_render);
   glutReshapeFunc(cb_resize);
+  glutTimerFunc(MILLIS_PER_FRAME, cb_timer, 0);
 }
 
 void glbridge_set_callbacks(const GLBridgeCallbacks* cb) {
