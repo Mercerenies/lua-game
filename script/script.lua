@@ -1,4 +1,11 @@
 
+MyObject = Object:define()
+
+local obj = MyObject:new()
+print(Object)
+print(MyObject)
+print(getmetatable(obj))
+
 function test()
   print("Drawing")
 end
@@ -18,8 +25,4 @@ print(Vector2(1, 1) == Vector2(1, 1))
 print(Vector2(1, 1).x)
 print(Vector2(1, 1).y)
 print(Vector2(1, 1).gibberish)
-
-print(getmetatable(Object.new()))
-print(Object)
-print(Object.new())
 --]]

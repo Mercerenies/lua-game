@@ -25,11 +25,38 @@ static int l_key_event(lua_State* L) {
   return 0;
 }
 
-// -0, +1, -
+// -1, +1, e
 static int l_new(lua_State* L) {
-  lua_newtable(L);
-  luaL_getmetatable(L, t_Object);
+  if (lua_getmetatable(L, -1) == 0) {
+    // No parent to call
+    lua_newtable(L);
+  } else {
+    // Call the parent to construct
+    lua_pushstring(L, "__index");
+    lua_gettable(L, -2);
+    lua_pushstring(L, "new");
+    lua_gettable(L, -2);
+    lua_insert(L, -2);
+    lua_call(L, 1, 1);
+    lua_remove(L, -2);
+  }
+
+  lua_insert(L, -2);
   lua_setmetatable(L, -2);
+  return 1;
+}
+
+// -1, +1, -
+static int l_define(lua_State* L) {
+  lua_newtable(L);
+
+  lua_pushstring(L, "__index");
+  lua_pushvalue(L, -2);
+  lua_rawset(L, -3);
+
+  lua_pushvalue(L, -2);
+  lua_setmetatable(L, -2);
+
   return 1;
 }
 
@@ -38,6 +65,7 @@ static const struct luaL_Reg objectlib[] = {
   {"draw", l_draw},
   {"key_event", l_key_event},
   {"new", l_new},
+  {"define", l_define},
   {NULL, NULL}
 };
 
