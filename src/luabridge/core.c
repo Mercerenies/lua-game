@@ -2,6 +2,7 @@
 #include "core.h"
 
 #include "vector2.h"
+#include "color.h"
 #include "object.h"
 
 #include <lua.h>
@@ -25,6 +26,7 @@ lua_State* luabridge_init() {
 
 void luabridge_init_libs(lua_State* L) {
   luabridge_vector2_define(L);
+  luabridge_color_define(L);
   luabridge_object_define(L);
 }
 

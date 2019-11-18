@@ -11,6 +11,8 @@ function test()
 end
 
 print "Hello :)"
+print(Color(1, 1, 1, 0))
+print(Color(1, 1, 1))
 
 --[[
 print(Vector2(1, 2))
