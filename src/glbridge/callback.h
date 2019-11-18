@@ -3,9 +3,13 @@
 #define GAME_GLBRIDGE_CALLBACK_H
 
 typedef struct {
-  void (*ondraw)();
+  void* state; // Borrowed
+  void (*ondraw)(void* state);
 } GLBridgeCallbacks;
 
 void glbridge_init_callbacks();
 
-#endif // GAME_GL_CALLBACK_H
+// Takes NO ownership of its pointer!
+void glbridge_set_callbacks(const GLBridgeCallbacks* cb);
+
+#endif // GAME_GLBRIDGE_CALLBACK_H

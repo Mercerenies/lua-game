@@ -6,4 +6,4 @@ void glbridge_init_and_display(int* argcp, char** argv);
 
 void glbridge_main_loop();
 
-#endif // GAME_GL_CORE_H
+#endif // GAME_GLBRIDGE_CORE_H

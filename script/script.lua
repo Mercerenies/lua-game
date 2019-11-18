@@ -1,4 +1,8 @@
 
+function test()
+  print("Drawing")
+end
+
 print "Hello :)"
 
 print(Vector2(1, 2))
