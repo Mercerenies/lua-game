@@ -4,6 +4,7 @@
 #include "vector2.h"
 #include "color.h"
 #include "object.h"
+#include "room.h"
 
 #include <lua.h>
 #include <lauxlib.h>
@@ -28,6 +29,7 @@ void luabridge_init_libs(lua_State* L) {
   luabridge_vector2_define(L);
   luabridge_color_define(L);
   luabridge_object_define(L);
+  luabridge_room_define(L);
 }
 
 void luabridge_deinit(lua_State* L) {

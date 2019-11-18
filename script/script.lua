@@ -2,17 +2,12 @@
 MyObject = Object:define()
 
 local obj = MyObject:new()
-print(Object)
-print(MyObject)
-print(getmetatable(obj))
 
-function test()
-  print("Drawing")
+function obj:draw()
+  -- TBA
 end
 
-print "Hello :)"
-print(Color(1, 1, 1, 0))
-print(Color(1, 1, 1))
+table.insert(Room.get_objects(), obj)
 
 --[[
 print(Vector2(1, 2))
