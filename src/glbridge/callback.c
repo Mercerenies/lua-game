@@ -15,6 +15,10 @@ static void cb_render() {
 }
 
 static void cb_resize(int w, int h) {
+
+  if (callbacks != NULL)
+    callbacks->onresize(callbacks->state, w, h);
+
   glViewport(0, 0, w, h);
   gluOrtho2D(0, 0, w, h);
 }
