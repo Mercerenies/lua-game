@@ -33,7 +33,7 @@ static int l_key_event(lua_State* L) {
 
 // -1, +1, e
 static int l_new(lua_State* L) {
-  if (lua_getmetatable(L, -1) == 0) {
+  if (lua_getmetatable(L, 1) == 0) {
     // No parent to call
     lua_newtable(L);
   } else {
