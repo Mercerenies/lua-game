@@ -7,6 +7,7 @@
 #include "room.h"
 #include "canvas.h"
 #include "constant.h"
+#include "window.h"
 
 #include <lua.h>
 #include <lauxlib.h>
@@ -34,6 +35,7 @@ void luabridge_init_libs(lua_State* L) {
   luabridge_room_define(L);
   luabridge_canvas_define(L);
   luabridge_constant_define(L);
+  luabridge_window_define(L);
 }
 
 void luabridge_deinit(lua_State* L) {
