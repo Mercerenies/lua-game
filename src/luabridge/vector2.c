@@ -1,6 +1,8 @@
 
 #include "vector2.h"
 
+#include "window.h"
+
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
@@ -21,6 +23,22 @@ Vector2* luabridge_vector2_pushnew(lua_State* L, lua_Number x, lua_Number y) {
   table->x = x;
   table->y = y;
   return table;
+}
+
+Vector2 luabridge_vector2_screentogl(Vector2 vec) {
+  int width = luabridge_window_getwidth();
+  int height = luabridge_window_getheight();
+  vec.x = 2 * vec.x / width - 1;
+  vec.y = 1 - 2 * vec.y / height;
+  return vec;
+}
+
+Vector2 luabridge_vector2_gltoscreen(Vector2 vec) {
+  int width = luabridge_window_getwidth();
+  int height = luabridge_window_getheight();
+  vec.x = (  1 + vec.x) * width / 2;
+  vec.y = (- 1 - vec.y) * height / 2;
+  return vec;
 }
 
 // -2, +1, e

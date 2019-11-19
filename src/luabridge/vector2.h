@@ -14,6 +14,10 @@ const char* t_Vector2_Meta;
 // -0, +1, -
 Vector2* luabridge_vector2_pushnew(lua_State* L, lua_Number x, lua_Number y);
 
+Vector2 luabridge_vector2_screentogl(Vector2 vec);
+
+Vector2 luabridge_vector2_gltoscreen(Vector2 vec);
+
 void luabridge_vector2_define(lua_State* L);
 
 #endif // GAME_LUABRIDGE_VECTOR2_H
