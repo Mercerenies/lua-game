@@ -19,12 +19,13 @@ function MyObject:init()
 end
 
 function MyObject:step()
-  -- TBA
+  self.angle = self.angle - 0.1
 end
 
-local obj = MyObject:new()
-
-table.insert(Room.get_objects(), obj)
+for i=1,4 do
+  local obj = MyObject:new()
+  table.insert(Room.get_objects(), obj)
+end
 
 --[[
 print(Vector2(1, 2))
