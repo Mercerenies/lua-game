@@ -30,10 +30,28 @@ static void onresize(void* state, int w, int h) {
   luabridge_window_setsize(w, h);
 }
 
+static void onstep(void* state) {
+  lua_State* L = state;
+
+  luabridge_room_getobjects(L);
+
+  size_t len = lua_rawlen(L, -1);
+  for (size_t i = 1; i <= len; i++) {
+    lua_rawgeti(L, -1, i);
+    lua_pushstring(L, "step");
+    lua_gettable(L, -2);
+    lua_insert(L, -2);
+    lua_call(L, 1, 0);
+  }
+  lua_pop(L, 1);
+
+}
+
 GLBridgeCallbacks luabridge_callbacks(lua_State* L) {
   GLBridgeCallbacks cb;
   cb.state = L;
   cb.ondraw = ondraw;
   cb.onresize = onresize;
+  cb.onstep = onstep;
   return cb;
 }

@@ -1,9 +1,7 @@
 
 MyObject = Object:define()
 
-local obj = MyObject:new()
-
-function obj:draw()
+function MyObject:draw()
   Canvas.set_color(Color(1, 0, 0))
   Canvas.draw_primitive(Constant.TRIANGLES, {
     Vector2(250, 250),
@@ -11,6 +9,12 @@ function obj:draw()
     Vector2(500, 250)
   })
 end
+
+function MyObject:step()
+  -- TBA
+end
+
+local obj = MyObject:new()
 
 table.insert(Room.get_objects(), obj)
 

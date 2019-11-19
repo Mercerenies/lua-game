@@ -6,6 +6,7 @@ typedef struct {
   void* state; // Borrowed
   void (*ondraw)(void* state);
   void (*onresize)(void* state, int w, int h);
+  void (*onstep)(void* state);
 } GLBridgeCallbacks;
 
 void glbridge_init_callbacks();

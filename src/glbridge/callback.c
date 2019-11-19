@@ -26,6 +26,11 @@ static void cb_resize(int w, int h) {
 }
 
 static void cb_timer(int value) {
+
+  if (callbacks != NULL) {
+    callbacks->onstep(callbacks->state);
+  }
+
   cb_render();
   glutTimerFunc(MILLIS_PER_FRAME, cb_timer, value);
 }
