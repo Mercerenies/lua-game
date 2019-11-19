@@ -14,16 +14,17 @@ function MyObject:draw()
   })
 end
 
-function MyObject:init()
-  self.angle = math.random() * 2 * math.pi
+function MyObject:init(t)
+  self.angle = t.angle
 end
 
 function MyObject:step()
   self.angle = self.angle - 0.1
 end
 
+local angle = math.random() * 2 * math.pi
 for i=1,4 do
-  local obj = MyObject:new()
+  local obj = MyObject:new { angle = angle + i * math.pi / 2 }
   table.insert(Room.get_objects(), obj)
 end
 

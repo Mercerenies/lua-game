@@ -31,7 +31,7 @@ static int l_key_event(lua_State* L) {
   return 0;
 }
 
-// -1, +1, e
+// -2, +1, e
 static int l_new(lua_State* L) {
   if (lua_getmetatable(L, 1) == 0) {
     // No parent to call
@@ -43,17 +43,19 @@ static int l_new(lua_State* L) {
     lua_pushstring(L, "new");
     lua_gettable(L, -2);
     lua_insert(L, -2);
-    lua_call(L, 1, 1);
+    lua_pushvalue(L, 2);
+    lua_call(L, 2, 1);
     lua_remove(L, -2);
   }
 
-  lua_insert(L, -2);
+  lua_pushvalue(L, 1);
   lua_setmetatable(L, -2);
 
   lua_pushstring(L, "init");
   lua_gettable(L, -2);
-  lua_pushvalue(L, -2);
-  lua_call(L, 1, 0);
+6  lua_pushvalue(L, -2);
+  lua_pushvalue(L, 2);
+  lua_call(L, 2, 0);
 
   return 1;
 }
