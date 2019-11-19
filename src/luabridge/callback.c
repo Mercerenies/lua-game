@@ -26,7 +26,8 @@ static void ondraw(void* state) {
 
 static void onresize(void* state, int w, int h) {
   lua_State* L = state;
-  luabridge_window_setsize(L, w, h);
+  (void)L;
+  luabridge_window_setsize(w, h);
 }
 
 GLBridgeCallbacks luabridge_callbacks(lua_State* L) {

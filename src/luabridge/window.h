@@ -6,7 +6,11 @@
 
 const char* t_Window;
 
-void luabridge_window_setsize(lua_State* L, int w, int h);
+void luabridge_window_setsize(int w, int h);
+
+int luabridge_window_getwidth();
+
+int luabridge_window_getheight();
 
 void luabridge_window_define(lua_State* L);
 

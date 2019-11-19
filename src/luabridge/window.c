@@ -23,11 +23,17 @@ static const struct luaL_Reg windowlib[] = {
   {NULL, NULL}
 };
 
-void luabridge_window_setsize(lua_State* L, int w, int h) {
-  (void)L; // May use this later, so I want to go ahead and take it as
-           // an argument.
+void luabridge_window_setsize(int w, int h) {
   window_width = w;
   window_height = h;
+}
+
+int luabridge_window_getwidth() {
+  return window_width;
+}
+
+int luabridge_window_getheight() {
+  return window_height;
 }
 
 void luabridge_window_define(lua_State* L) {
