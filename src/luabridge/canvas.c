@@ -3,6 +3,7 @@
 
 #include "color.h"
 #include "vector2.h"
+#include "constant.h"
 
 #include <lua.h>
 #include <lualib.h>
@@ -13,16 +14,19 @@
 
 const char* t_Canvas = "Canvas";
 
-// -1, +0, e
+// -2, +0, e
+// draw_primitive(mode, points)
 int l_draw_primitive(lua_State* L) {
-  luaL_checktype(L, 1, LUA_TTABLE);
-  size_t len = lua_rawlen(L, 1);
+  luabridge_constant_identify(L, 1);
+  lua_Number mode = luaL_checknumber(L, 1);
 
-  // TODO Customize the glBegin arg from Lua
-  glBegin(GL_TRIANGLE_STRIP);
+  luaL_checktype(L, 2, LUA_TTABLE);
+  size_t len = lua_rawlen(L, 2);
+
+  glBegin(mode);
 
   for (size_t i = 1; i <= len; i++) {
-    lua_rawgeti(L, 1, i);
+    lua_rawgeti(L, 2, i);
     Vector2* vec = luaL_testudata(L, -1, t_Vector2);
     if (vec == NULL) {
       glEnd();

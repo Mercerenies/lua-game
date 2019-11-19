@@ -5,11 +5,11 @@ local obj = MyObject:new()
 
 function obj:draw()
   Canvas.set_color(Color(1, 0, 0))
-  Canvas.draw_primitive {
+  Canvas.draw_primitive(Constant.TRIANGLES, {
     Vector2(250, 250),
     Vector2(500, 500),
     Vector2(500, 250)
-  }
+  })
 end
 
 table.insert(Room.get_objects(), obj)
