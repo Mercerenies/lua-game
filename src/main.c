@@ -19,6 +19,12 @@ void deinit_trap() {
   }
 }
 
+int l_protection(lua_State* L) {
+  (void)L;
+  glbridge_main_loop();
+  return 0;
+}
+
 int main(int argc, char** argv) {
   (void)argc;
   (void)argv;
@@ -41,7 +47,12 @@ int main(int argc, char** argv) {
 
   luabridge_eval_file(L, "script/script.lua");
 
-  glbridge_main_loop();
-
+  lua_pushcfunction(L, l_protection);
+  int error = lua_pcall(L, 0, 0, 0);
+  if (error) {
+    fprintf(stderr, "%s\n", lua_tostring(L, -1));
+    lua_pop(L, 1);
+    return 1;
+  }
   return 0;
 }
