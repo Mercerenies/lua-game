@@ -8,6 +8,12 @@
 const char* t_Object = "Object";
 
 // -0, +0, -
+static int l_init(lua_State* L) {
+  (void)L;
+  return 0;
+}
+
+// -0, +0, -
 static int l_step(lua_State* L) {
   (void)L;
   return 0;
@@ -43,6 +49,12 @@ static int l_new(lua_State* L) {
 
   lua_insert(L, -2);
   lua_setmetatable(L, -2);
+
+  lua_pushstring(L, "init");
+  lua_gettable(L, -2);
+  lua_pushvalue(L, -2);
+  lua_call(L, 1, 0);
+
   return 1;
 }
 
@@ -61,6 +73,7 @@ static int l_define(lua_State* L) {
 }
 
 static const struct luaL_Reg objectlib[] = {
+  {"init", l_init},
   {"step", l_step},
   {"draw", l_draw},
   {"key_event", l_key_event},

@@ -1,13 +1,21 @@
 
+math.randomseed(os.time())
+
 MyObject = Object:define()
 
 function MyObject:draw()
+  local center = Window.get_size() / 2
+  local radius = 100
   Canvas.set_color(Color(1, 0, 0))
   Canvas.draw_primitive(Constant.TRIANGLES, {
-    Vector2(250, 250),
-    Vector2(500, 500),
-    Vector2(500, 250)
+    center,
+    center + Vector2(radius * math.cos(self.angle), radius * math.sin(self.angle)),
+    center + Vector2(radius * math.cos(self.angle + 0.1), radius * math.sin(self.angle + 0.1))
   })
+end
+
+function MyObject:init()
+  self.angle = math.random() * 2 * math.pi
 end
 
 function MyObject:step()
