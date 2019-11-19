@@ -4,7 +4,12 @@ MyObject = Object:define()
 local obj = MyObject:new()
 
 function obj:draw()
-  -- TBA
+  Canvas.set_color(Color(1, 0, 0))
+  Canvas.draw_primitive {
+    Vector2(250, 250),
+    Vector2(500, 500),
+    Vector2(500, 250)
+  }
 end
 
 table.insert(Room.get_objects(), obj)
