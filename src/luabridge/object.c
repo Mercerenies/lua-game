@@ -53,7 +53,7 @@ static int l_new(lua_State* L) {
 
   lua_pushstring(L, "init");
   lua_gettable(L, -2);
-6  lua_pushvalue(L, -2);
+  lua_pushvalue(L, -2);
   lua_pushvalue(L, 2);
   lua_call(L, 2, 0);
 
