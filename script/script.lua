@@ -1,6 +1,11 @@
 
 math.randomseed(os.time())
 
+-- TODO I'll move this to C soon and it'll be an official part of the
+-- API. But for now, we're just gonna hack it together here for
+-- testing. (////)
+local tmp = {}
+
 MyObject = Object:define()
 
 function MyObject:draw()
@@ -20,18 +25,26 @@ end
 
 function MyObject:step()
   self.angle = self.angle - 0.1
-end
-
-function MyObject:key_event(k)
-  if k == Key.LEFT then
+  -- TODO It would be nice if we could make this indexing a bit safer.
+  -- Right now, there's no actual guarantee that these userdata are
+  -- consistent with __eq. (/////)
+  if tmp[Key.LEFT] then
     self.center = self.center + Vector2(-2, 0)
-  elseif k == Key.RIGHT then
+  elseif tmp[Key.RIGHT] then
     self.center = self.center + Vector2(2, 0)
-  elseif k == Key.UP then
+  elseif tmp[Key.UP] then
     self.center = self.center + Vector2(0, -2)
-  elseif k == Key.DOWN then
+  elseif tmp[Key.DOWN] then
     self.center = self.center + Vector2(0, 2)
   end
+end
+
+function MyObject:key_down(k)
+  tmp[k] = true
+end
+
+function MyObject:key_up(k)
+  tmp[k] = false
 end
 
 local angle = math.random() * 2 * math.pi
