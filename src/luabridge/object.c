@@ -26,7 +26,13 @@ static int l_draw(lua_State* L) {
 }
 
 // -0, +0, -
-static int l_key_event(lua_State* L) {
+static int l_key_down(lua_State* L) {
+  (void)L;
+  return 0;
+}
+
+// -0, +0, -
+static int l_key_up(lua_State* L) {
   (void)L;
   return 0;
 }
@@ -78,7 +84,8 @@ static const struct luaL_Reg objectlib[] = {
   {"init", l_init},
   {"step", l_step},
   {"draw", l_draw},
-  {"key_event", l_key_event},
+  {"key_down", l_key_down},
+  {"key_up", l_key_up},
   {"new", l_new},
   {"define", l_define},
   {NULL, NULL}

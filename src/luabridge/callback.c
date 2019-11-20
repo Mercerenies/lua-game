@@ -61,7 +61,7 @@ static void onkey(void* state, unsigned char ch, int x, int y) {
   size_t len = lua_rawlen(L, -1);
   for (size_t i = 1; i <= len; i++) {
     lua_rawgeti(L, -1, i);
-    lua_pushstring(L, "key_event");
+    lua_pushstring(L, "key_down");
     lua_gettable(L, -2);
     lua_insert(L, -2);
     lua_pushvalue(L, keyindex);
@@ -84,7 +84,53 @@ static void onspeckey(void* state, int ch, int x, int y) {
   size_t len = lua_rawlen(L, -1);
   for (size_t i = 1; i <= len; i++) {
     lua_rawgeti(L, -1, i);
-    lua_pushstring(L, "key_event");
+    lua_pushstring(L, "key_down");
+    lua_gettable(L, -2);
+    lua_insert(L, -2);
+    lua_pushvalue(L, keyindex);
+    lua_call(L, 2, 0);
+  }
+  lua_pop(L, 2);
+
+}
+
+static void onkeyup(void* state, unsigned char ch, int x, int y) {
+  lua_State* L = state;
+
+  (void)x;
+  (void)y;
+
+  luabridge_keyboard_push(L, luabridge_keyboard_make_normal(ch));
+  int keyindex = lua_gettop(L);
+  luabridge_room_getobjects(L);
+
+  size_t len = lua_rawlen(L, -1);
+  for (size_t i = 1; i <= len; i++) {
+    lua_rawgeti(L, -1, i);
+    lua_pushstring(L, "key_up");
+    lua_gettable(L, -2);
+    lua_insert(L, -2);
+    lua_pushvalue(L, keyindex);
+    lua_call(L, 2, 0);
+  }
+  lua_pop(L, 2);
+
+}
+
+static void onspeckeyup(void* state, int ch, int x, int y) {
+  lua_State* L = state;
+
+  (void)x;
+  (void)y;
+
+  luabridge_keyboard_push(L, luabridge_keyboard_make_special(ch));
+  int keyindex = lua_gettop(L);
+  luabridge_room_getobjects(L);
+
+  size_t len = lua_rawlen(L, -1);
+  for (size_t i = 1; i <= len; i++) {
+    lua_rawgeti(L, -1, i);
+    lua_pushstring(L, "key_up");
     lua_gettable(L, -2);
     lua_insert(L, -2);
     lua_pushvalue(L, keyindex);
@@ -102,5 +148,7 @@ GLBridgeCallbacks luabridge_callbacks(lua_State* L) {
   cb.onstep = onstep;
   cb.onkey = onkey;
   cb.onspeckey = onspeckey;
+  cb.onkeyup = onkeyup;
+  cb.onspeckeyup = onspeckeyup;
   return cb;
 }

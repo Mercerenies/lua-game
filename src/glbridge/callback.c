@@ -3,6 +3,8 @@
 
 #include <GL/glut.h>
 
+#include <stdbool.h>
+
 #define MILLIS_PER_FRAME 16
 
 static const GLBridgeCallbacks* callbacks = NULL;
@@ -45,12 +47,25 @@ static void cb_special_keyboard(int key, int x, int y) {
     callbacks->onspeckey(callbacks->state, key, x, y);
 }
 
+static void cb_keyboard_up(unsigned char key, int x, int y) {
+  if (callbacks != NULL)
+    callbacks->onkeyup(callbacks->state, key, x, y);
+}
+
+static void cb_special_keyboard_up(int key, int x, int y) {
+  if (callbacks != NULL)
+    callbacks->onspeckeyup(callbacks->state, key, x, y);
+}
+
 void glbridge_init_callbacks() {
   glutDisplayFunc(cb_render);
   glutReshapeFunc(cb_resize);
   glutTimerFunc(MILLIS_PER_FRAME, cb_timer, 0);
   glutKeyboardFunc(cb_keyboard);
   glutSpecialFunc(cb_special_keyboard);
+  glutKeyboardUpFunc(cb_keyboard_up);
+  glutSpecialUpFunc(cb_special_keyboard_up);
+  glutIgnoreKeyRepeat(true);
 }
 
 void glbridge_set_callbacks(const GLBridgeCallbacks* cb) {
