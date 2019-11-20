@@ -8,6 +8,15 @@
 
 #include <stdbool.h>
 
+// Representation for KeyboardKey:
+// 0-255 : GLUT special key constants
+// 256-1023 : Currently unused, reserved for future use by this application
+// 1024-1151 : Standard ASCII encoding
+
+#define GLUT_NULL 0
+#define ASCII_NULL 1024
+#define ASCII_COUNT 128
+
 const char* t_Keyboard = "Keyboard";
 
 const char* t_Key = "Key";
@@ -18,25 +27,15 @@ typedef struct KeyReg {
 } KeyReg;
 
 KeyboardKey luabridge_keyboard_make_normal(unsigned char ch) {
-  KeyboardKey k;
-  k.is_special = false;
-  k.normal = ch;
-  return k;
+  return ASCII_NULL + (long)ch;
 }
 
 KeyboardKey luabridge_keyboard_make_special(int ch) {
-  KeyboardKey k;
-  k.is_special = true;
-  k.special = ch;
-  return k;
+  return GLUT_NULL + ch;
 }
 
-KeyboardKey* luabridge_keyboard_push(lua_State* L, KeyboardKey k) {
-  KeyboardKey* table = lua_newuserdata(L, sizeof(KeyboardKey));
-  luaL_getmetatable(L, t_Key);
-  lua_setmetatable(L, -2);
-  *table = k;
-  return table;
+void luabridge_keyboard_push(lua_State* L, KeyboardKey k) {
+  lua_pushinteger(L, k);
 }
 
 // -1, +1, e
@@ -52,51 +51,34 @@ int l_key_of(lua_State* L) {
   return 1;
 }
 
-// -2, +1, e
-int l_eq(lua_State* L) {
-  KeyboardKey* a = luaL_checkudata(L, 1, t_Key);
-  KeyboardKey* b = luaL_checkudata(L, 2, t_Key);
-  if (a->is_special != b->is_special) {
-    lua_pushboolean(L, false);
-    return 1;
-  }
-  if (a->is_special) {
-    lua_pushboolean(L, a->special == b->special);
-  } else {
-    lua_pushboolean(L, a->normal == b->normal);
-  }
-  return 1;
-}
-
 static const struct luaL_Reg keylib[] = {
   {"of", l_key_of},
-  {"__eq", l_eq},
   {NULL, NULL}
 };
 
 static const struct KeyReg keylibc[] = {
-  {"F1", {true, {.special = GLUT_KEY_F1}}},
-  {"F2", {true, {.special = GLUT_KEY_F2}}},
-  {"F3", {true, {.special = GLUT_KEY_F3}}},
-  {"F4", {true, {.special = GLUT_KEY_F4}}},
-  {"F5", {true, {.special = GLUT_KEY_F5}}},
-  {"F6", {true, {.special = GLUT_KEY_F6}}},
-  {"F7", {true, {.special = GLUT_KEY_F7}}},
-  {"F8", {true, {.special = GLUT_KEY_F8}}},
-  {"F9", {true, {.special = GLUT_KEY_F9}}},
-  {"F10", {true, {.special = GLUT_KEY_F10}}},
-  {"F11", {true, {.special = GLUT_KEY_F11}}},
-  {"F12", {true, {.special = GLUT_KEY_F12}}},
-  {"LEFT", {true, {.special = GLUT_KEY_LEFT}}},
-  {"UP", {true, {.special = GLUT_KEY_UP}}},
-  {"RIGHT", {true, {.special = GLUT_KEY_RIGHT}}},
-  {"DOWN", {true, {.special = GLUT_KEY_DOWN}}},
-  {"PAGE_UP", {true, {.special = GLUT_KEY_PAGE_UP}}},
-  {"PAGE_DOWN", {true, {.special = GLUT_KEY_PAGE_DOWN}}},
-  {"HOME", {true, {.special = GLUT_KEY_HOME}}},
-  {"END", {true, {.special = GLUT_KEY_END}}},
-  {"INSERT", {true, {.special = GLUT_KEY_INSERT}}},
-  {NULL, {}}
+  {"F1", GLUT_NULL + GLUT_KEY_F1},
+  {"F2", GLUT_NULL + GLUT_KEY_F2},
+  {"F3", GLUT_NULL + GLUT_KEY_F3},
+  {"F4", GLUT_NULL + GLUT_KEY_F4},
+  {"F5", GLUT_NULL + GLUT_KEY_F5},
+  {"F6", GLUT_NULL + GLUT_KEY_F6},
+  {"F7", GLUT_NULL + GLUT_KEY_F7},
+  {"F8", GLUT_NULL + GLUT_KEY_F8},
+  {"F9", GLUT_NULL + GLUT_KEY_F9},
+  {"F10", GLUT_NULL + GLUT_KEY_F10},
+  {"F11", GLUT_NULL + GLUT_KEY_F11},
+  {"F12", GLUT_NULL + GLUT_KEY_F12},
+  {"LEFT", GLUT_NULL + GLUT_KEY_LEFT},
+  {"UP", GLUT_NULL + GLUT_KEY_UP},
+  {"RIGHT", GLUT_NULL + GLUT_KEY_RIGHT},
+  {"DOWN", GLUT_NULL + GLUT_KEY_DOWN},
+  {"PAGE_UP", GLUT_NULL + GLUT_KEY_PAGE_UP},
+  {"PAGE_DOWN", GLUT_NULL + GLUT_KEY_PAGE_DOWN},
+  {"HOME", GLUT_NULL + GLUT_KEY_HOME},
+  {"END", GLUT_NULL + GLUT_KEY_END},
+  {"INSERT", GLUT_NULL + GLUT_KEY_INSERT},
+  {NULL, GLUT_NULL}
 };
 
 static const struct luaL_Reg keyboardlib[] = {
