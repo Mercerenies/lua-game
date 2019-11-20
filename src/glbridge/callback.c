@@ -35,10 +35,22 @@ static void cb_timer(int value) {
   glutTimerFunc(MILLIS_PER_FRAME, cb_timer, value);
 }
 
+static void cb_keyboard(unsigned char key, int x, int y) {
+  if (callbacks != NULL)
+    callbacks->onkey(callbacks->state, key, x, y);
+}
+
+static void cb_special_keyboard(int key, int x, int y) {
+  if (callbacks != NULL)
+    callbacks->onspeckey(callbacks->state, key, x, y);
+}
+
 void glbridge_init_callbacks() {
   glutDisplayFunc(cb_render);
   glutReshapeFunc(cb_resize);
   glutTimerFunc(MILLIS_PER_FRAME, cb_timer, 0);
+  glutKeyboardFunc(cb_keyboard);
+  glutSpecialFunc(cb_special_keyboard);
 }
 
 void glbridge_set_callbacks(const GLBridgeCallbacks* cb) {

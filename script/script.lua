@@ -16,10 +16,22 @@ end
 
 function MyObject:init(t)
   self.angle = t.angle
+  --print(Key.of('a') == Key.of('a'))
+  --print(Key.of('a') == Key.of('b'))
+  --print(Key.of('a') == Key.F1)
+  --print(Key.F1 == Key.F1)
 end
 
 function MyObject:step()
   self.angle = self.angle - 0.1
+end
+
+function MyObject:key_event(k)
+  if k == Key.of('p') then
+    print("You hit the P key :)")
+  elseif k == Key.F1 then
+    print("You hit the F1 key :)")
+  end
 end
 
 local angle = math.random() * 2 * math.pi
