@@ -4,22 +4,18 @@ math.randomseed(os.time())
 MyObject = Object:define()
 
 function MyObject:draw()
-  local center = Window.get_size() / 2
   local radius = 100
   Canvas.set_color(Color(1, 0, 0))
   Canvas.draw_primitive(Constant.TRIANGLES, {
-    center,
-    center + Vector2(radius * math.cos(self.angle), radius * math.sin(self.angle)),
-    center + Vector2(radius * math.cos(self.angle + 0.1), radius * math.sin(self.angle + 0.1))
+    self.center,
+    self.center + Vector2(radius * math.cos(self.angle), radius * math.sin(self.angle)),
+    self.center + Vector2(radius * math.cos(self.angle + 0.1), radius * math.sin(self.angle + 0.1))
   })
 end
 
 function MyObject:init(t)
   self.angle = t.angle
-  --print(Key.of('a') == Key.of('a'))
-  --print(Key.of('a') == Key.of('b'))
-  --print(Key.of('a') == Key.F1)
-  --print(Key.F1 == Key.F1)
+  self.center = Window.get_size() / 2
 end
 
 function MyObject:step()
@@ -27,10 +23,14 @@ function MyObject:step()
 end
 
 function MyObject:key_event(k)
-  if k == Key.of('p') then
-    print("You hit the P key :)")
-  elseif k == Key.F1 then
-    print("You hit the F1 key :)")
+  if k == Key.LEFT then
+    self.center = self.center + Vector2(-2, 0)
+  elseif k == Key.RIGHT then
+    self.center = self.center + Vector2(2, 0)
+  elseif k == Key.UP then
+    self.center = self.center + Vector2(0, -2)
+  elseif k == Key.DOWN then
+    self.center = self.center + Vector2(0, 2)
   end
 end
 
