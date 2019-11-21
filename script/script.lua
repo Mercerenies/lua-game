@@ -1,6 +1,10 @@
 
 math.randomseed(os.time())
 
+-- ///// Need to use the freeglut_ext to deal with shift, ctrl, alt. I
+-- need to magic away some of the details if you just want to check
+-- for Key.SHIFT (rather than Key.SHIFT_L or Key.SHIFT_R)
+
 MyObject = Object:define()
 
 function MyObject:draw()
@@ -43,14 +47,6 @@ function MyObject:step()
     self.center = self.center + 2 * Vector2(math.cos(dir), math.sin(dir))
   end
 end
-
---function MyObject:key_down(k)
---  tmp[k] = true
---end
-
---function MyObject:key_up(k)
---  tmp[k] = false
---end
 
 local angle = math.random() * 2 * math.pi
 for i=1,4 do
