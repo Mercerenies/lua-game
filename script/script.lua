@@ -25,17 +25,27 @@ end
 
 function MyObject:step()
   self.angle = self.angle - 0.1
-  -- TODO It would be nice if we could make this indexing a bit safer.
-  -- Right now, there's no actual guarantee that these userdata are
-  -- consistent with __eq. (/////)
+  local moving = false
+  local dir = Vector2(0, 0)
   if tmp[Key.LEFT] then
-    self.center = self.center + Vector2(-2, 0)
-  elseif tmp[Key.RIGHT] then
-    self.center = self.center + Vector2(2, 0)
-  elseif tmp[Key.UP] then
-    self.center = self.center + Vector2(0, -2)
-  elseif tmp[Key.DOWN] then
-    self.center = self.center + Vector2(0, 2)
+    dir = dir + Vector2(-1, 0)
+    moving = true
+  end
+  if tmp[Key.RIGHT] then
+    dir = dir + Vector2(1, 0)
+    moving = true
+  end
+  if tmp[Key.UP] then
+    dir = dir + Vector2(0, -1)
+    moving = true
+  end
+  if tmp[Key.DOWN] then
+    dir = dir + Vector2(0, 1)
+    moving = true
+  end
+  dir = math.atan2(dir.y, dir.x)
+  if moving then
+    self.center = self.center + 2 * Vector2(math.cos(dir), math.sin(dir))
   end
 end
 
