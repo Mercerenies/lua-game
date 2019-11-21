@@ -21,4 +21,8 @@ void luabridge_keyboard_push(lua_State* L, KeyboardKey k);
 
 void luabridge_keyboard_define(lua_State* L);
 
+void luabridge_keyboard_set_state(lua_State* L, KeyboardKey k, bool state);
+
+bool luabridge_keyboard_get_state(lua_State* L, KeyboardKey k);
+
 #endif // GAME_LUABRIDGE_KEYBOARD_H

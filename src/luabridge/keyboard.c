@@ -17,6 +17,8 @@
 #define ASCII_NULL 1024
 #define ASCII_COUNT 128
 
+static int ref_keytable = 0;
+
 const char* t_Keyboard = "Keyboard";
 
 const char* t_Key = "Key";
@@ -51,6 +53,13 @@ int l_key_of(lua_State* L) {
   return 1;
 }
 
+// -1, +1, e
+int l_is_down(lua_State* L) {
+  KeyboardKey k = luaL_checknumber(L, 1);
+  lua_pushboolean(L, luabridge_keyboard_get_state(L, k));
+  return 1;
+}
+
 static const struct luaL_Reg keylib[] = {
   {"of", l_key_of},
   {NULL, NULL}
@@ -82,6 +91,7 @@ static const struct KeyReg keylibc[] = {
 };
 
 static const struct luaL_Reg keyboardlib[] = {
+  {"is_down", l_is_down},
   {NULL, NULL}
 };
 
@@ -100,5 +110,22 @@ void luabridge_keyboard_define(lua_State* L) {
   luaL_setfuncs(L, keylib, 0);
 
   lua_setglobal(L, t_Key);
+
+  lua_newtable(L);
+  ref_keytable = luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
+void luabridge_keyboard_set_state(lua_State* L, KeyboardKey k, bool state) {
+  lua_rawgeti(L, LUA_REGISTRYINDEX, ref_keytable);
+  lua_pushboolean(L, state);
+  lua_rawseti(L, -2, k);
+  lua_pop(L, 1);
+}
+
+bool luabridge_keyboard_get_state(lua_State* L, KeyboardKey k) {
+  lua_rawgeti(L, LUA_REGISTRYINDEX, ref_keytable);
+  lua_rawgeti(L, -1, k);
+  bool result = lua_toboolean(L, -1);
+  lua_pop(L, 2);
+  return result;
+}

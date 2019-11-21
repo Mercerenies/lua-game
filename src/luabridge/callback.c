@@ -9,6 +9,7 @@
 #include <lua.h>
 
 #include <ctype.h>
+#include <stdbool.h>
 
 static void ondraw(void* state) {
   lua_State* L = state;
@@ -56,9 +57,13 @@ static void onkey(void* state, unsigned char ch, int x, int y) {
   (void)x;
   (void)y;
 
-  luabridge_keyboard_push(L, luabridge_keyboard_make_normal(tolower(ch)));
+  KeyboardKey key = luabridge_keyboard_make_normal(tolower(ch));
+
+  luabridge_keyboard_push(L, key);
   int keyindex = lua_gettop(L);
   luabridge_room_getobjects(L);
+
+  luabridge_keyboard_set_state(L, key, true);
 
   size_t len = lua_rawlen(L, -1);
   for (size_t i = 1; i <= len; i++) {
@@ -79,9 +84,13 @@ static void onspeckey(void* state, int ch, int x, int y) {
   (void)x;
   (void)y;
 
-  luabridge_keyboard_push(L, luabridge_keyboard_make_special(ch));
+  KeyboardKey key = luabridge_keyboard_make_special(ch);
+
+  luabridge_keyboard_push(L, key);
   int keyindex = lua_gettop(L);
   luabridge_room_getobjects(L);
+
+  luabridge_keyboard_set_state(L, key, true);
 
   size_t len = lua_rawlen(L, -1);
   for (size_t i = 1; i <= len; i++) {
@@ -102,9 +111,13 @@ static void onkeyup(void* state, unsigned char ch, int x, int y) {
   (void)x;
   (void)y;
 
-  luabridge_keyboard_push(L, luabridge_keyboard_make_normal(tolower(ch)));
+  KeyboardKey key = luabridge_keyboard_make_normal(tolower(ch));
+
+  luabridge_keyboard_push(L, key);
   int keyindex = lua_gettop(L);
   luabridge_room_getobjects(L);
+
+  luabridge_keyboard_set_state(L, key, false);
 
   size_t len = lua_rawlen(L, -1);
   for (size_t i = 1; i <= len; i++) {
@@ -125,9 +138,13 @@ static void onspeckeyup(void* state, int ch, int x, int y) {
   (void)x;
   (void)y;
 
-  luabridge_keyboard_push(L, luabridge_keyboard_make_special(ch));
+  KeyboardKey key = luabridge_keyboard_make_special(ch);
+
+  luabridge_keyboard_push(L, key);
   int keyindex = lua_gettop(L);
   luabridge_room_getobjects(L);
+
+  luabridge_keyboard_set_state(L, key, false);
 
   size_t len = lua_rawlen(L, -1);
   for (size_t i = 1; i <= len; i++) {

@@ -1,11 +1,6 @@
 
 math.randomseed(os.time())
 
--- TODO I'll move this to C soon and it'll be an official part of the
--- API. But for now, we're just gonna hack it together here for
--- testing. (////)
-local tmp = {}
-
 MyObject = Object:define()
 
 function MyObject:draw()
@@ -27,19 +22,19 @@ function MyObject:step()
   self.angle = self.angle - 0.1
   local moving = false
   local dir = Vector2(0, 0)
-  if tmp[Key.LEFT] then
+  if Keyboard.is_down(Key.LEFT) then
     dir = dir + Vector2(-1, 0)
     moving = true
   end
-  if tmp[Key.RIGHT] then
+  if Keyboard.is_down(Key.RIGHT) then
     dir = dir + Vector2(1, 0)
     moving = true
   end
-  if tmp[Key.UP] then
+  if Keyboard.is_down(Key.UP) then
     dir = dir + Vector2(0, -1)
     moving = true
   end
-  if tmp[Key.DOWN] then
+  if Keyboard.is_down(Key.DOWN) then
     dir = dir + Vector2(0, 1)
     moving = true
   end
@@ -49,13 +44,13 @@ function MyObject:step()
   end
 end
 
-function MyObject:key_down(k)
-  tmp[k] = true
-end
+--function MyObject:key_down(k)
+--  tmp[k] = true
+--end
 
-function MyObject:key_up(k)
-  tmp[k] = false
-end
+--function MyObject:key_up(k)
+--  tmp[k] = false
+--end
 
 local angle = math.random() * 2 * math.pi
 for i=1,4 do
