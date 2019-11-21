@@ -8,6 +8,8 @@
 
 #include <lua.h>
 
+#include <ctype.h>
+
 static void ondraw(void* state) {
   lua_State* L = state;
 
@@ -54,7 +56,7 @@ static void onkey(void* state, unsigned char ch, int x, int y) {
   (void)x;
   (void)y;
 
-  luabridge_keyboard_push(L, luabridge_keyboard_make_normal(ch));
+  luabridge_keyboard_push(L, luabridge_keyboard_make_normal(tolower(ch)));
   int keyindex = lua_gettop(L);
   luabridge_room_getobjects(L);
 
@@ -100,7 +102,7 @@ static void onkeyup(void* state, unsigned char ch, int x, int y) {
   (void)x;
   (void)y;
 
-  luabridge_keyboard_push(L, luabridge_keyboard_make_normal(ch));
+  luabridge_keyboard_push(L, luabridge_keyboard_make_normal(tolower(ch)));
   int keyindex = lua_gettop(L);
   luabridge_room_getobjects(L);
 
