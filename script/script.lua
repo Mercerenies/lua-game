@@ -1,10 +1,6 @@
 
 math.randomseed(os.time())
 
--- ///// Need to use the freeglut_ext to deal with shift, ctrl, alt. I
--- need to magic away some of the details if you just want to check
--- for Key.SHIFT (rather than Key.SHIFT_L or Key.SHIFT_R)
-
 MyObject = Object:define()
 
 function MyObject:draw()

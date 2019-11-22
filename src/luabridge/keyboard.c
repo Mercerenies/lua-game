@@ -4,16 +4,20 @@
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 
 #include <stdbool.h>
 
 // Representation for KeyboardKey:
 // 0-255 : GLUT special key constants
-// 256-1023 : Currently unused, reserved for future use by this application
+// 256-1023 : Special constants used by this application
 // 1024-1151 : Standard ASCII encoding
 
 #define GLUT_NULL 0
+#define SPECIAL_NULL 256
+#define SPECIAL_SHIFT 257
+#define SPECIAL_CTRL 258
+#define SPECIAL_ALT 259
 #define ASCII_NULL 1024
 #define ASCII_COUNT 128
 
@@ -56,7 +60,28 @@ int l_key_of(lua_State* L) {
 // -1, +1, e
 int l_is_down(lua_State* L) {
   KeyboardKey k = luaL_checknumber(L, 1);
-  lua_pushboolean(L, luabridge_keyboard_get_state(L, k));
+  bool result = false;
+  switch (k) {
+  case SPECIAL_SHIFT:
+    result =
+      luabridge_keyboard_get_state(L, GLUT_KEY_SHIFT_L) ||
+      luabridge_keyboard_get_state(L, GLUT_KEY_SHIFT_R);
+    break;
+  case SPECIAL_CTRL:
+    result =
+      luabridge_keyboard_get_state(L, GLUT_KEY_CTRL_L) ||
+      luabridge_keyboard_get_state(L, GLUT_KEY_CTRL_R);
+    break;
+  case SPECIAL_ALT:
+    result =
+      luabridge_keyboard_get_state(L, GLUT_KEY_ALT_L) ||
+      luabridge_keyboard_get_state(L, GLUT_KEY_ALT_R);
+    break;
+  default:
+    result = luabridge_keyboard_get_state(L, k);
+    break;
+  }
+  lua_pushboolean(L, result);
   return 1;
 }
 
@@ -87,6 +112,18 @@ static const struct KeyReg keylibc[] = {
   {"HOME", GLUT_NULL + GLUT_KEY_HOME},
   {"END", GLUT_NULL + GLUT_KEY_END},
   {"INSERT", GLUT_NULL + GLUT_KEY_INSERT},
+  {"NUM_LOCK", GLUT_NULL + GLUT_KEY_NUM_LOCK},
+  {"BEGIN", GLUT_NULL + GLUT_KEY_BEGIN},
+  {"DELETE", GLUT_NULL + GLUT_KEY_DELETE},
+  {"SHIFT_L", GLUT_NULL + GLUT_KEY_SHIFT_L},
+  {"SHIFT_R", GLUT_NULL + GLUT_KEY_SHIFT_R},
+  {"CTRL_L", GLUT_NULL + GLUT_KEY_CTRL_L},
+  {"CTRL_R", GLUT_NULL + GLUT_KEY_CTRL_R},
+  {"ALT_L", GLUT_NULL + GLUT_KEY_ALT_L},
+  {"ALT_R", GLUT_NULL + GLUT_KEY_ALT_R},
+  {"SHIFT", SPECIAL_SHIFT},
+  {"CTRL", SPECIAL_CTRL},
+  {"ALT", SPECIAL_ALT},
   {NULL, GLUT_NULL}
 };
 
