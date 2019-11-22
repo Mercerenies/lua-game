@@ -49,6 +49,8 @@ static void onstep(void* state) {
   }
   lua_pop(L, 1);
 
+  luabridge_keyboard_reset_presses();
+
 }
 
 static void onkey(void* state, unsigned char ch, int x, int y) {

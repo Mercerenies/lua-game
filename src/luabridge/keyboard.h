@@ -25,4 +25,10 @@ void luabridge_keyboard_set_state(lua_State* L, KeyboardKey k, bool state);
 
 bool luabridge_keyboard_get_state(lua_State* L, KeyboardKey k);
 
+void luabridge_keyboard_reset_presses();
+
+bool luabridge_keyboard_was_pressed(KeyboardKey k);
+
+bool luabridge_keyboard_was_released(KeyboardKey k);
+
 #endif // GAME_LUABRIDGE_KEYBOARD_H

@@ -21,7 +21,15 @@
 #define ASCII_NULL 1024
 #define ASCII_COUNT 128
 
+#define MAX_KEY_MEMORY 8
+
 static int ref_keytable = 0;
+
+static KeyboardKey pressed[MAX_KEY_MEMORY];
+static int pressed_ptr = 0;
+
+static KeyboardKey released[MAX_KEY_MEMORY];
+static int released_ptr = 0;
 
 const char* t_Keyboard = "Keyboard";
 
@@ -64,21 +72,77 @@ int l_is_down(lua_State* L) {
   switch (k) {
   case SPECIAL_SHIFT:
     result =
-      luabridge_keyboard_get_state(L, GLUT_KEY_SHIFT_L) ||
-      luabridge_keyboard_get_state(L, GLUT_KEY_SHIFT_R);
+      luabridge_keyboard_get_state(L, GLUT_NULL + GLUT_KEY_SHIFT_L) ||
+      luabridge_keyboard_get_state(L, GLUT_NULL +GLUT_KEY_SHIFT_R);
     break;
   case SPECIAL_CTRL:
     result =
-      luabridge_keyboard_get_state(L, GLUT_KEY_CTRL_L) ||
-      luabridge_keyboard_get_state(L, GLUT_KEY_CTRL_R);
+      luabridge_keyboard_get_state(L, GLUT_NULL + GLUT_KEY_CTRL_L) ||
+      luabridge_keyboard_get_state(L, GLUT_NULL + GLUT_KEY_CTRL_R);
     break;
   case SPECIAL_ALT:
     result =
-      luabridge_keyboard_get_state(L, GLUT_KEY_ALT_L) ||
-      luabridge_keyboard_get_state(L, GLUT_KEY_ALT_R);
+      luabridge_keyboard_get_state(L, GLUT_NULL + GLUT_KEY_ALT_L) ||
+      luabridge_keyboard_get_state(L, GLUT_NULL + GLUT_KEY_ALT_R);
     break;
   default:
     result = luabridge_keyboard_get_state(L, k);
+    break;
+  }
+  lua_pushboolean(L, result);
+  return 1;
+}
+
+// -1, +1, e
+int l_is_pressed(lua_State* L) {
+  KeyboardKey k = luaL_checknumber(L, 1);
+  bool result = false;
+  switch (k) {
+  case SPECIAL_SHIFT:
+    result =
+      luabridge_keyboard_was_pressed(GLUT_NULL + GLUT_KEY_SHIFT_L) ||
+      luabridge_keyboard_was_pressed(GLUT_NULL + GLUT_KEY_SHIFT_R);
+    break;
+  case SPECIAL_CTRL:
+    result =
+      luabridge_keyboard_was_pressed(GLUT_NULL + GLUT_KEY_CTRL_L) ||
+      luabridge_keyboard_was_pressed(GLUT_NULL + GLUT_KEY_CTRL_R);
+    break;
+  case SPECIAL_ALT:
+    result =
+      luabridge_keyboard_was_pressed(GLUT_NULL + GLUT_KEY_ALT_L) ||
+      luabridge_keyboard_was_pressed(GLUT_NULL + GLUT_KEY_ALT_R);
+    break;
+  default:
+    result = luabridge_keyboard_was_pressed(k);
+    break;
+  }
+  lua_pushboolean(L, result);
+  return 1;
+}
+
+// -1, +1, e
+int l_is_released(lua_State* L) {
+  KeyboardKey k = luaL_checknumber(L, 1);
+  bool result = false;
+  switch (k) {
+  case SPECIAL_SHIFT:
+    result =
+      luabridge_keyboard_was_released(GLUT_NULL + GLUT_KEY_SHIFT_L) ||
+      luabridge_keyboard_was_released(GLUT_NULL + GLUT_KEY_SHIFT_R);
+    break;
+  case SPECIAL_CTRL:
+    result =
+      luabridge_keyboard_was_released(GLUT_NULL + GLUT_KEY_CTRL_L) ||
+      luabridge_keyboard_was_released(GLUT_NULL + GLUT_KEY_CTRL_R);
+    break;
+  case SPECIAL_ALT:
+    result =
+      luabridge_keyboard_was_released(GLUT_NULL + GLUT_KEY_ALT_L) ||
+      luabridge_keyboard_was_released(GLUT_NULL + GLUT_KEY_ALT_R);
+    break;
+  default:
+    result = luabridge_keyboard_was_released(k);
     break;
   }
   lua_pushboolean(L, result);
@@ -129,6 +193,8 @@ static const struct KeyReg keylibc[] = {
 
 static const struct luaL_Reg keyboardlib[] = {
   {"is_down", l_is_down},
+  {"is_pressed", l_is_pressed},
+  {"is_released", l_is_released},
   {NULL, NULL}
 };
 
@@ -157,6 +223,14 @@ void luabridge_keyboard_set_state(lua_State* L, KeyboardKey k, bool state) {
   lua_pushboolean(L, state);
   lua_rawseti(L, -2, k);
   lua_pop(L, 1);
+
+  if (state) {
+    if (pressed_ptr < MAX_KEY_MEMORY)
+      pressed[pressed_ptr++] = k;
+  } else {
+    if (released_ptr < MAX_KEY_MEMORY)
+      released[released_ptr++] = k;
+  }
 }
 
 bool luabridge_keyboard_get_state(lua_State* L, KeyboardKey k) {
@@ -165,4 +239,25 @@ bool luabridge_keyboard_get_state(lua_State* L, KeyboardKey k) {
   bool result = lua_toboolean(L, -1);
   lua_pop(L, 2);
   return result;
+}
+
+void luabridge_keyboard_reset_presses() {
+  pressed_ptr = 0;
+  released_ptr = 0;
+}
+
+bool luabridge_keyboard_was_pressed(KeyboardKey k) {
+  for (int i = 0; i < pressed_ptr; i++) {
+    if (pressed[i] == k)
+      return true;
+  }
+  return false;
+}
+
+bool luabridge_keyboard_was_released(KeyboardKey k) {
+  for (int i = 0; i < released_ptr; i++) {
+    if (released[i] == k)
+      return true;
+  }
+  return false;
 }
