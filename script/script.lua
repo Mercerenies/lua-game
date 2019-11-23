@@ -55,21 +55,29 @@ function SnakeHead:draw()
   --Canvas.draw_primitive(Constant.QUADS,
   --                      {Vector2(0, 0), Vector2(500, 0), Vector2(500, 500), Vector2(0, 500)})
   Canvas.set_color(Color(1, 1, 1))
-  Canvas.draw_primitive(Constant.QUADS, {
-    self.pos, self.pos + Vector2(15, 0),
-    self.pos + Vector2(15, 15), self.pos + Vector2(0, 15)
-  })
+  Canvas.draw_rectangle(self.pos, self.pos + Vector2(15, 15))
   for i = 0, self.trail_len - 1 do
     local alpha = i / (2 * self.trail_len) + 0.5
     Canvas.set_color(Color(1, 1, 1, alpha))
     local pos = self.trail[(self.trail_ptr + i) % self.trail_len]
     if pos then
-      Canvas.draw_primitive(Constant.QUADS, {
-        pos, pos + Vector2(15, 0),
-        pos + Vector2(15, 15), pos + Vector2(0, 15)
-      })
+      Canvas.draw_rectangle(pos, pos + Vector2(15, 15))
     end
   end
 end
 
+OuterWalls = Object:define()
+
+function OuterWalls:draw()
+  Canvas.set_color(Color(1, 1, 1))
+  local win = Window.get_size()
+  local ul, lr = Vector2(16, 16), win - Vector2(16, 16)
+  local ll, ur = Vector2(16, win.y - 16), Vector2(win.x - 16, 16)
+  Canvas.draw_line(ul, ur)
+  Canvas.draw_line(ur, lr)
+  Canvas.draw_line(lr, ll)
+  Canvas.draw_line(ll, ul)
+end
+
 table.insert(Room.get_objects(), SnakeHead:new({x=128, y=128}))
+table.insert(Room.get_objects(), OuterWalls:new())

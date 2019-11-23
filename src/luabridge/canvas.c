@@ -15,6 +15,34 @@
 const char* t_Canvas = "Canvas";
 
 // -2, +0, e
+int l_draw_line(lua_State* L) {
+  Vector2* a = luaL_checkudata(L, 1, t_Vector2);
+  Vector2* b = luaL_checkudata(L, 2, t_Vector2);
+  Vector2 a1 = luabridge_vector2_screentogl(*a);
+  Vector2 b1 = luabridge_vector2_screentogl(*b);
+  glBegin(GL_LINES);
+  glVertex3f(a1.x, a1.y, 0.0);
+  glVertex3f(b1.x, b1.y, 0.0);
+  glEnd();
+  return 0;
+}
+
+// -2, +0, e
+int l_draw_rectangle(lua_State* L) {
+  Vector2* a = luaL_checkudata(L, 1, t_Vector2);
+  Vector2* b = luaL_checkudata(L, 2, t_Vector2);
+  Vector2 a1 = luabridge_vector2_screentogl(*a);
+  Vector2 b1 = luabridge_vector2_screentogl(*b);
+  glBegin(GL_QUADS);
+  glVertex3f(a1.x, a1.y, 0.0);
+  glVertex3f(a1.x, b1.y, 0.0);
+  glVertex3f(b1.x, b1.y, 0.0);
+  glVertex3f(b1.x, a1.y, 0.0);
+  glEnd();
+  return 0;
+}
+
+// -2, +0, e
 // draw_primitive(mode, points)
 int l_draw_primitive(lua_State* L) {
   luabridge_constant_identify(L, 1);
@@ -48,6 +76,8 @@ int l_set_color(lua_State* L) {
 }
 
 static const struct luaL_Reg canvaslib[] = {
+  {"draw_rectangle", l_draw_rectangle},
+  {"draw_line", l_draw_line},
   {"draw_primitive", l_draw_primitive},
   {"set_color", l_set_color},
   {NULL, NULL}
