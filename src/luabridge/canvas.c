@@ -5,6 +5,8 @@
 #include "vector2.h"
 #include "constant.h"
 
+#include "../glbridge/text.h"
+
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
@@ -68,6 +70,20 @@ int l_draw_primitive(lua_State* L) {
   return 0;
 }
 
+// -2, +0, e
+// draw_text(pos, text)
+int l_draw_text(lua_State* L) {
+  Vector2* pos = luaL_checkudata(L, 1, t_Vector2);
+  Vector2 pos1 = luabridge_vector2_screentogl(*pos);
+  const char* text = luaL_checkstring(L, 2); // Doesn't support nulls
+                                             // right now. Don't print
+                                             // nulls to the screen.
+
+  glbridge_draw_text(pos1.x, pos1.y, GLUT_BITMAP_8_BY_13, text);
+
+  return 0;
+}
+
 // -1, +0, e
 int l_set_color(lua_State* L) {
   Color* color = luaL_checkudata(L, 1, t_Color);
@@ -79,6 +95,7 @@ static const struct luaL_Reg canvaslib[] = {
   {"draw_rectangle", l_draw_rectangle},
   {"draw_line", l_draw_line},
   {"draw_primitive", l_draw_primitive},
+  {"draw_text", l_draw_text},
   {"set_color", l_set_color},
   {NULL, NULL}
 };

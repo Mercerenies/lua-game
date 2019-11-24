@@ -81,6 +81,9 @@ function SnakeHead:draw()
       Canvas.draw_rectangle(pos, pos + Vector2(15, 15))
     end
   end
+
+  Canvas.draw_text(Vector2(16, 24), self.score)
+
 end
 
 OuterWalls = Object:define()
