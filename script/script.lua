@@ -41,19 +41,36 @@ function SnakeHead:step()
       self.trail_len = self.trail_len + 1
     end
 
+    -- Check whether we've collided
+    for i, v in ipairs(self.trail) do
+      if v == self.pos then
+        self:game_over()
+        break
+      end
+    end
+
+    -- Check whether OOB
+    local win = Window.get_size()
+    if self.pos.x >= win.x - 16 or self.pos.x < 16 or
+      self.pos.y >= win.y - 16 or self.pos.y < 32 then
+        self:game_over()
+    end
+
   end
 end
 
+function SnakeHead:game_over()
+  print("Final score: " .. self.score)
+  Game:terminate()
+end
+
 function SnakeHead:key_down(k)
-  if snake_head_keys[k] then
+  if snake_head_keys[k] and (self.dir - snake_head_keys[k]) % (2 * math.pi) ~= math.pi then
     self.dir = snake_head_keys[k]
   end
 end
 
 function SnakeHead:draw()
-  --Canvas.set_color(Color(0, 0, 0))
-  --Canvas.draw_primitive(Constant.QUADS,
-  --                      {Vector2(0, 0), Vector2(500, 0), Vector2(500, 500), Vector2(0, 500)})
   Canvas.set_color(Color(1, 1, 1))
   Canvas.draw_rectangle(self.pos, self.pos + Vector2(15, 15))
   for i = 0, self.trail_len - 1 do
@@ -71,8 +88,8 @@ OuterWalls = Object:define()
 function OuterWalls:draw()
   Canvas.set_color(Color(1, 1, 1))
   local win = Window.get_size()
-  local ul, lr = Vector2(16, 16), win - Vector2(16, 16)
-  local ll, ur = Vector2(16, win.y - 16), Vector2(win.x - 16, 16)
+  local ul, lr = Vector2(16, 32), win - Vector2(16, 16)
+  local ll, ur = Vector2(16, win.y - 16), Vector2(win.x - 16, 32)
   Canvas.draw_line(ul, ur)
   Canvas.draw_line(ur, lr)
   Canvas.draw_line(lr, ll)
